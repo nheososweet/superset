@@ -72,7 +72,9 @@ Superset provides:
 ## Screenshots & Gifs
 
 **Video Overview**
+
 <!-- File hosted here https://github.com/apache/superset-site/raw/lfs/superset-video-4k.mp4 -->
+
 [superset-video-4k.webm](https://github.com/apache/superset/assets/812905/da036bc2-150c-4ee7-80f9-75e63210ff76)
 
 <br/>
@@ -151,7 +153,7 @@ Want to add support for your datastore or data engine? Read more [here](https://
   and please read our [Slack Community Guidelines](https://github.com/apache/superset/blob/master/CODE_OF_CONDUCT.md#slack-community-guidelines)
 - [Join our dev@superset.apache.org Mailing list](https://lists.apache.org/list.html?dev@superset.apache.org). To join, simply send an email to [dev-subscribe@superset.apache.org](mailto:dev-subscribe@superset.apache.org)
 - If you want to help troubleshoot GitHub Issues involving the numerous database drivers that Superset supports, please consider adding your name and the databases you have access to on the [Superset Database Familiarity Rolodex](https://docs.google.com/spreadsheets/d/1U1qxiLvOX0kBTUGME1AHHi6Ywel6ECF8xk_Qy-V9R8c/edit#gid=0)
-- Join Superset's Town Hall and [Operational Model](https://preset.io/blog/the-superset-operational-model-wants-you/) recurring meetings.  Meeting info is available on the [Superset Community Calendar](https://superset.apache.org/community)
+- Join Superset's Town Hall and [Operational Model](https://preset.io/blog/the-superset-operational-model-wants-you/) recurring meetings. Meeting info is available on the [Superset Community Calendar](https://superset.apache.org/community)
 
 ## Contributor Guide
 
@@ -179,14 +181,16 @@ Understanding the Superset Points of View
   - [Building New Database Connectors](https://preset.io/blog/building-database-connector/)
   - [Create Your First Dashboard](https://superset.apache.org/docs/using-superset/creating-your-first-dashboard/)
   - [Comprehensive Tutorial for Contributing Code to Apache Superset
-  ](https://preset.io/blog/tutorial-contributing-code-to-apache-superset/)
+    ](https://preset.io/blog/tutorial-contributing-code-to-apache-superset/)
 - [Resources to master Superset by Preset](https://preset.io/resources/)
 
 - Deploying Superset
+
   - [Official Docker image](https://hub.docker.com/r/apache/superset)
   - [Helm Chart](https://github.com/apache/superset/tree/master/helm/superset)
 
 - Recordings of Past [Superset Community Events](https://preset.io/events)
+
   - [Mixed Time Series Charts](https://preset.io/events/mixed-time-series-visualization-in-superset-workshop/)
   - [How the Bing Team Customized Superset for the Internal Self-Serve Data & Analytics Platform](https://preset.io/events/how-the-bing-team-heavily-customized-superset-for-their-internal-data/)
   - [Live Demo: Visualizing MongoDB and Pinot Data using Trino](https://preset.io/events/2021-04-13-visualizing-mongodb-and-pinot-data-using-trino/)
@@ -194,6 +198,7 @@ Understanding the Superset Points of View
   - [Building a Database Connector for Superset](https://preset.io/events/2021-02-16-building-a-database-connector-for-superset/)
 
 - Visualizations
+
   - [Creating Viz Plugins](https://superset.apache.org/docs/contributing/creating-viz-plugins/)
   - [Managing and Deploying Custom Viz Plugins](https://medium.com/nmc-techblog/apache-superset-manage-custom-viz-plugins-in-production-9fde1a708e55)
   - [Why Apache Superset is Betting on Apache ECharts](https://preset.io/blog/2021-4-1-why-echarts/)
@@ -213,3 +218,193 @@ Understanding the Superset Points of View
 
 <!-- telemetry/analytics pixel: -->
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=bc1c90cd-bc04-4e11-8c7b-289fb2839492" />
+
+<!-- --- -->
+
+... existing README content ...
+
+---
+
+# Local Development Guide
+
+<p align="center">
+  <img src="https://superset.apache.org/img/superset-logo-horiz-apache.svg" alt="Superset logo" width="500"/>
+</p>
+
+## Development Setup Guide
+
+### Prerequisites
+
+<details>
+<summary>Required Software</summary>
+
+- Python 3.8+
+- Node.js 16+
+- PostgreSQL
+- Redis
+- Git
+</details>
+
+### Initial Database Setup
+
+```sql
+-- Run in PostgreSQL
+CREATE DATABASE superset;
+```
+
+### Environment Setup
+
+<details>
+<summary>1. Python Virtual Environment</summary>
+
+```powershell
+# Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\activate
+
+# Set environment variables
+$env:FLASK_APP = "superset"
+$env:FLASK_ENV = "development"
+$env:PYTHONPATH = "E:\sphinxjsc\SUPERSET_LOCAL\superset"
+$env:SUPERSET_CONFIG_PATH = "E:\sphinxjsc\SUPERSET_LOCAL\superset\superset_config.py"
+$env:SUPERSET_HOME = "$env:USERPROFILE\superset"
+```
+
+</details>
+
+<details>
+<summary>2. Install Dependencies</summary>
+
+```powershell
+# Install Python base requirements
+pip install -r requirements/base.txt
+
+# Install development requirements
+pip install -r requirements/development.txt
+
+# Install frontend dependencies
+cd superset-frontend
+npm install
+```
+
+</details>
+
+<details>
+<summary>3. Initialize Superset</summary>
+
+```powershell
+# Upgrade database
+flask db upgrade
+
+# Create admin user
+flask fab create-admin
+
+# Initialize Superset
+superset init
+
+# (Optional) Load example data
+superset load_examples
+```
+
+</details>
+
+### Running Development Servers
+
+<details>
+<summary>1. Backend Server</summary>
+
+```powershell
+# Make sure virtual environment is activated
+.\venv\Scripts\activate
+
+# Run Flask development server
+flask run -p 8088 --reload
+```
+
+</details>
+
+<details>
+<summary>2. Frontend Server</summary>
+
+```powershell
+# In a new terminal, navigate to frontend directory
+cd superset-frontend
+
+# Run webpack dev server
+npm run dev
+```
+
+</details>
+
+### Access Application
+
+- Frontend Development UI: http://localhost:9000
+- Backend API Server: http://localhost:8088
+
+### Configuration Files
+
+<details>
+<summary>Key Configuration Files</summary>
+
+```plaintext
+superset/
+├── superset_config.py          # Main backend configuration
+├── .env                        # Environment variables
+└── superset-frontend/
+    └── .env                    # Frontend environment config
+```
+
+</details>
+
+### Troubleshooting
+
+<details>
+<summary>Common Issues</summary>
+
+1. **Module not found: shortid**
+
+```powershell
+pip install shortid
+```
+
+2. **Frontend build fails**
+
+```powershell
+cd superset-frontend
+npm cache clean --force
+rm -rf node_modules
+npm install
+```
+
+3. **Database connection issues**
+
+- Check PostgreSQL service is running
+- Verify database credentials in `superset_config.py`
+- Ensure Redis server is running
+
+4. **Port conflicts**
+
+- Ensure ports 8088 and 9000 are available
+- Check for other running processes using these ports
+</details>
+
+### Project Structure
+
+<details>
+<summary>Key Directories</summary>
+
+```plaintext
+superset/
+├── superset/              # Python backend code
+│   ├── views/            # API endpoints
+│   ├── models/           # Database models
+│   └── api/             # REST APIs
+├── superset-frontend/    # React frontend code
+│   ├── src/             # Source files
+│   ├── plugins/         # Custom plugins
+│   └── spec/           # Tests
+```
+
+</details>
+
+---
