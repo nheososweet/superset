@@ -290,6 +290,13 @@ superset/
 - Use `--reload` flag for auto-reloading
 - Check logs for detailed error messages
 
+<div align="center">
+  <hr style="border: 2px solid #1FA8C9; width: 100%">
+  <h2>⚡ End of Local Development Guide ⚡</h2>
+  <p><i>Above content is maintained by development team</i></p>
+  <hr style="border: 2px solid #1FA8C9; width: 100%">
+</div>
+
 # Superset
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
