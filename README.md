@@ -333,6 +333,23 @@ AUTH_USER_REGISTRATION = False
 
 ### 4.1 Python Dependencies
 
+#### 4.1.1 Special Requirements
+
+1. Download python-ldap wheel file from:
+
+   - https://github.com/cgohlke/python-ldap-build/releases
+   - Choose file: `python_ldap‑3.4.4‑cp310‑cp310‑win_amd64.whl`
+   - Save to: `D:\Downloads` or your preferred location
+
+2. Install downloaded wheel:
+
+```powershell
+# Install python-ldap wheel first
+pip install "D:\Downloads\python_ldap-3.4.4-cp310-cp310-win_amd64.whl"
+```
+
+#### 4.1.2 Install Other Dependencies
+
 ```powershell
 # Install in order
 pip install -r requirements/base.txt
