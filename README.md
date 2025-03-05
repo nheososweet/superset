@@ -223,151 +223,183 @@ Understanding the Superset Points of View
 
 ... existing README content ...
 
----
-
-# Local Development Guide
+# Apache Superset Local Development Setup Guide
 
 <p align="center">
-  <img src="https://superset.apache.org/img/superset-logo-horiz-apache.svg" alt="Superset logo" width="500"/>
+  <img src="https://superset.apache.org/img/superset-logo-horiz-apache.svg" alt="Superset" width="500"/>
 </p>
 
-## Development Setup Guide
+## Setup Process Overview
 
-### Prerequisites
+1. Install Prerequisites
+2. Setup Environment
+3. Configure Application
+4. Install Dependencies
+5. Initialize Database
+6. Run Application
 
-<details>
-<summary>Required Software</summary>
+## 1. Prerequisites Installation
+
+### 1.1 Required Software
 
 - Python 3.8+
 - Node.js 16+
 - PostgreSQL
 - Redis
 - Git
-</details>
 
-### Initial Database Setup
+### 1.2 Database Setup
 
 ```sql
--- Run in PostgreSQL
 CREATE DATABASE superset;
 ```
 
-### Environment Setup
-
-<details>
-<summary>1. Python Virtual Environment</summary>
+### 1.3 Service Verification
 
 ```powershell
-# Create and activate virtual environment
-python -m venv venv
-.\venv\Scripts\activate
+# Check PostgreSQL
+net start postgresql
 
-# Set environment variables
-$env:FLASK_APP = "superset"
-$env:FLASK_ENV = "development"
-$env:PYTHONPATH = "E:\sphinxjsc\SUPERSET_LOCAL\superset"
-$env:SUPERSET_CONFIG_PATH = "E:\sphinxjsc\SUPERSET_LOCAL\superset\superset_config.py"
-$env:SUPERSET_HOME = "$env:USERPROFILE\superset"
+# Check Redis
+net start redis
 ```
 
-</details>
+## 2. Environment Setup
 
-<details>
-<summary>2. Install Dependencies</summary>
+### 2.1 Clone Repository
 
 ```powershell
-# Install Python base requirements
+git clone https://github.com/apache/superset.git
+cd superset
+```
+
+### 2.2 Virtual Environment
+
+```powershell
+# Create venv
+python -m venv venv
+
+# Activate
+.\venv\Scripts\activate
+
+# Upgrade pip
+python -m pip install --upgrade pip
+```
+
+## 3. Configuration
+
+### 3.1 Environment Variables
+
+```bash
+# filepath: .env
+FLASK_APP=superset
+FLASK_ENV=development
+PYTHONPATH=E:\\path\\to\\superset
+SUPERSET_CONFIG_PATH=E:\\path\\to\\superset\\superset_config.py
+SUPERSET_HOME=E:\\path\\to\\superset
+```
+
+### 3.2 Superset Configuration
+
+```python
+# filepath: superset_config.py
+import os
+from flask_appbuilder.security.manager import AUTH_DB
+
+# Data directory
+DATA_DIR = os.path.join(os.path.expanduser("~"), "superset")
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
+
+# Database
+SQLALCHEMY_DATABASE_URI = "postgresql://postgres:123456@localhost:5432/superset"
+
+# Redis
+CACHE_CONFIG = {
+    "CACHE_TYPE": "redis",
+    "CACHE_DEFAULT_TIMEOUT": 86400,
+    "CACHE_KEY_PREFIX": "superset_",
+    "CACHE_REDIS_HOST": "localhost",
+    "CACHE_REDIS_PORT": 6379,
+    "CACHE_REDIS_DB": 1,
+}
+
+# Authentication
+AUTH_TYPE = AUTH_DB
+AUTH_USER_REGISTRATION = False
+```
+
+## 4. Dependencies Installation
+
+### 4.1 Python Dependencies
+
+```powershell
+# Install in order
 pip install -r requirements/base.txt
-
-# Install development requirements
 pip install -r requirements/development.txt
+```
 
-# Install frontend dependencies
+### 4.2 Frontend Dependencies
+
+```powershell
 cd superset-frontend
 npm install
 ```
 
-</details>
+## 5. Application Initialization
 
-<details>
-<summary>3. Initialize Superset</summary>
+### 5.1 Database Setup
 
 ```powershell
-# Upgrade database
 flask db upgrade
-
-# Create admin user
-flask fab create-admin
-
-# Initialize Superset
-superset init
-
-# (Optional) Load example data
-superset load_examples
 ```
 
-</details>
-
-### Running Development Servers
-
-<details>
-<summary>1. Backend Server</summary>
+### 5.2 Create Admin User
 
 ```powershell
-# Make sure virtual environment is activated
-.\venv\Scripts\activate
+flask fab create-admin
+```
 
-# Run Flask development server
+### 5.3 Initialize Superset
+
+```powershell
+superset init
+```
+
+## 6. Running the Application
+
+### 6.1 Backend Server
+
+```powershell
+# Terminal 1
+.\venv\Scripts\activate
 flask run -p 8088 --reload
 ```
 
-</details>
-
-<details>
-<summary>2. Frontend Server</summary>
+### 6.2 Frontend Server
 
 ```powershell
-# In a new terminal, navigate to frontend directory
+# Terminal 2
 cd superset-frontend
-
-# Run webpack dev server
 npm run dev
 ```
 
-</details>
+### 6.3 Access Application
 
-### Access Application
+- Frontend: http://localhost:9000
+- Backend: http://localhost:8088
 
-- Frontend Development UI: http://localhost:9000
-- Backend API Server: http://localhost:8088
+## Troubleshooting Guide
 
-### Configuration Files
+### Common Issues
 
-<details>
-<summary>Key Configuration Files</summary>
-
-```plaintext
-superset/
-├── superset_config.py          # Main backend configuration
-├── .env                        # Environment variables
-└── superset-frontend/
-    └── .env                    # Frontend environment config
-```
-
-</details>
-
-### Troubleshooting
-
-<details>
-<summary>Common Issues</summary>
-
-1. **Module not found: shortid**
+1. **Module Not Found Errors**
 
 ```powershell
 pip install shortid
 ```
 
-2. **Frontend build fails**
+2. **Frontend Build Errors**
 
 ```powershell
 cd superset-frontend
@@ -376,35 +408,36 @@ rm -rf node_modules
 npm install
 ```
 
-3. **Database connection issues**
+3. **Database Connection Issues**
 
-- Check PostgreSQL service is running
-- Verify database credentials in `superset_config.py`
-- Ensure Redis server is running
+- Check services are running
+- Verify database credentials
+- Ensure Redis is accessible
 
-4. **Port conflicts**
+4. **Path Issues**
 
-- Ensure ports 8088 and 9000 are available
-- Check for other running processes using these ports
-</details>
+- Verify PYTHONPATH
+- Check virtual environment activation
+- Confirm file paths in configs
 
-### Project Structure
-
-<details>
-<summary>Key Directories</summary>
+## Project Structure
 
 ```plaintext
 superset/
-├── superset/              # Python backend code
-│   ├── views/            # API endpoints
-│   ├── models/           # Database models
-│   └── api/             # REST APIs
-├── superset-frontend/    # React frontend code
-│   ├── src/             # Source files
-│   ├── plugins/         # Custom plugins
-│   └── spec/           # Tests
+├── requirements/
+│   ├── base.txt
+│   └── development.txt
+├── superset/
+│   ├── views/
+│   ├── models/
+│   └── api/
+├── superset-frontend/
+└── superset_config.py
 ```
 
-</details>
+## Development Tips
 
----
+- Always work in virtual environment
+- Monitor both frontend and backend logs
+- Use `--reload` flag for auto-reloading
+- Check logs for detailed error messages
