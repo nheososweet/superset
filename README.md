@@ -17,8 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Superset Local Development Setup Guide
-
 <div align="center">
   <h1 style="border-bottom: 3px solid #1FA8C9; padding-bottom: 10px;">
     🚀 Local Development Setup Guide 
