@@ -60,12 +60,48 @@ net start redis
 
 ## 2. Environment Setup
 
-### 2.1 Clone Repository
+### 2.1 Repository Setup
+
+1. Fork repository:
+
+   - Visit https://github.com/apache/superset
+   - Click "Fork" button in top right
+   - Create fork in your GitHub account
+
+2. Clone your forked repository:
 
 ```powershell
-git clone https://github.com/apache/superset.git
+# Replace 'YOUR_USERNAME' with your GitHub username
+git clone https://github.com/YOUR_USERNAME/superset.git
 cd superset
 ```
+
+3. Switch to stable version:
+
+```powershell
+# Check available tags
+git tag
+
+# Checkout specific version
+git checkout 4.1.1
+
+# Create development branch from tag
+git checkout -b feature/my-development
+```
+
+4. Verify setup:
+
+```powershell
+# Check current branch and tag
+git status
+git describe --tags
+```
+
+This ensures you:
+
+1. Have your own fork for development
+2. Work on a stable release (4.1.1)
+3. Develop on your own branch
 
 ### 2.2 Virtual Environment
 
