@@ -19,9 +19,12 @@ under the License.
 
 # Apache Superset Local Development Setup Guide
 
-<p align="center">
-  <img src="https://superset.apache.org/img/superset-logo-horiz-apache.svg" alt="Superset" width="500"/>
-</p>
+<div align="center">
+  <h1 style="border-bottom: 3px solid #1FA8C9; padding-bottom: 10px;">
+    🚀 Local Development Setup Guide 
+  </h1>
+  <p><i>A comprehensive guide for setting up Apache Superset development environment</i></p>
+</div>
 
 ## Setup Process Overview
 
